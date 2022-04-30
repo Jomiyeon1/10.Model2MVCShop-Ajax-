@@ -23,31 +23,19 @@
 				 //<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
 				 $( "td.ct_btn01:contains('검색')" ).on("click" , function() {
 					//Debug..
-					alert(  $( "td.ct_btn01:contains('검색')" ).html() );
+					//alert(  $( "td.ct_btn01:contains('검색')" ).html() );
 					fncGetList(1);
 					
 					
 			});
-
-/* 				 $( ".ct_list_pop td:nth-child(3)" ).on("click" , function() {
-						//Debug..
-						alert(  $(this).prop("prodNo") );
-						if(${menu == 'search'}){
-						self.location ="/product/getProduct?prodNo="+$(this).attr("prodNo");
-						}
-						
-						if(${menu == 'manage'}){
-							self.location ="/product/updateProduct?prodNo="+$(this).attr("prodNo");
-						}
-				}); */
 				
-				<c:if test="${menu eq 'search'}">
+/*  				<c:if test="${menu eq 'search'}">
 				$( ".ct_list_pop td:nth-child(3)" ).on("click" , function() {
 		               //Debug..
 		               //alert(  $( this ).text().trim() );
 		               self.location ="/product/getProduct?prodNo="+$(this).attr("prodNo");
 		         });
-		         </c:if>
+		         </c:if> */
 		         
 		         <c:if test="${menu eq 'manage'}">
 		         $( ".ct_list_pop td:nth-child(3)" ).on("click" , function() {
@@ -55,9 +43,51 @@
 		            //alert(  $( this ).text().trim() );
 		            self.location ="/product/updateProduct?prodNo="+$(this).attr("prodNo");
 		         });
-		         </c:if>
-				  
-				 $(".ct_list_pop:nth-child(2n+1)" ).css("background-color" , "lavenderblush");	 
+		         </c:if> 
+				  // ajax
+				 
+				 
+				 <c:if test="${menu eq 'search'}">
+				 $( ".ct_list_pop td:nth-child(3)" ).on("click" , function() {
+					 var prodNo = $(this).attr("prodNo");
+					 //alert("prodNo : \n"+prodNo);
+						$.ajax( 
+								{
+									url : "/product/json/getProduct/"+prodNo ,
+									method : "GET" ,
+									dataType : "json" ,
+									headers : {
+										"Accept" : "application/json",
+										"Content-Type" : "application/json"
+									},
+									success : function(JSONData , status) {
+
+										//Debug...
+										//alert(status);
+										//Debug...
+										//alert("JSONData : \n"+JSONData);
+										//alert("JSONData.productName : \n"+JSONData.prodName);
+										//alert("JSONData.price : \n"+JSONData.price);
+										//alert("JSONData.manuDate : \n"+JSONData.manuDate);
+										
+										var displayValue = "<h3>"
+															+"상품명   : "+JSONData.prodName+"<br/>"
+															+"상세정보 : "+JSONData.prodDetail+"<br/>"
+															+"가  격   : "+JSONData.price+"<br/>"
+															+"등록일   : "+JSONData.manuDate+"<br/>"
+															+"제조일   : "+JSONData.regDateString+"<br/>"
+															+"</h3>";
+										//Debug...									
+										//alert(displayValue);
+										$("h3").remove();
+										$( "#"+prodNo+"" ).html(displayValue);
+									}
+							});
+				 }); </c:if>
+						
+						$(".ct_list_pop:nth-child(4n+6)" ).css("background-color" , "lavenderblush");	 
+						
+						
  		});
 	 
 		
@@ -164,13 +194,6 @@
 					<td align="center">${ i }</td>
 					<td></td>
 					<td align="left" ProdNo=${product.prodNo}>
-					<!--  -->
-<%-- 				<c:if test="${menu eq 'search'}">
-						<a href="/product/getProduct?prodNo=${product.prodNo}">${product.prodName}</a>
-					</c:if>
-					<c:if test="${menu eq 'manage'}">
-						<a href="/product/updateProduct?prodNo=${product.prodNo}">${product.prodName}</a> 
-					</c:if> --%>
 						${product.prodName}
 					<!--  -->
 					</td>
@@ -181,6 +204,11 @@
 					<td></td>
 					<td align="left">${product.proTranCode} </td>	
 				 </tr>
+				 
+				 <tr>
+				 <td id="${product.prodNo}" colspan="11" bgcolor="D6D7D6" height="1"></td>
+				 </tr> 
+				 
 				  </c:forEach>
 			</table>
 

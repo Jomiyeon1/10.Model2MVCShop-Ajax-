@@ -61,6 +61,7 @@
 									//alert(status);
 									//Debug...
 									//alert("JSONData : \n"+JSONData);
+									//alert("JSONData.productName : \n"+JSONData.userId);
 									
 									var displayValue = "<h3>"
 																+"¾ÆÀÌµð : "+JSONData.userId+"<br/>"
